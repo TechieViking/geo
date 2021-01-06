@@ -1,7 +1,7 @@
 <html>
 
 <head>
-  <title>A Leaflet map!</title>
+  <title>Map</title>
   <link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css"
     integrity="sha512-xodZBNTC5n17Xt2atTPuE1HxjVMSvLVW9ocqUKLsCC5CXdbqCmblAshOMAS6/keqq/sMZMZ19scR4PsZChSR7A=="
     crossorigin="" />
@@ -29,129 +29,156 @@
     #map {
       height: 100%
     }
+
+    .filters {
+      position: absolute;
+      width: 15em;
+      top: 128px;
+      z-index: 500;
+      left: 10px;
+      background: #fff;
+      padding: 10px;
+      border-radius: 10px;
+    }
   </style>
 </head>
 
 <body>
 
   <div id="map"></div>
-  <div style="position: absolute; width: 15em; top: 10px; z-index: 500;">
-    GoogleMutant demo
-    <div><button id="dc">DC</button><small>(flyTo)</small></div>
-    <div><button id="sf">SF</button><small>(setView, 5 sec)</small></div>
-    <div><button id="trd">TRD</button><small>(flyTo 20 sec)</small></div>
-    <div><button id="lnd">LND</button><small>(fract. zoom)</small></div>
-    <div><button id="kyiv">KIEV</button><small>(setView, fract. zoom)</small></div>
-    <div><button id="mad">MAD</button><small>(fitBounds)</small></div>
-    <div><button id="nul">NUL</button><small>(image overlay)</small></div>
-    <div><button id="stop">stop</button></div>
+  <div class="filters">
+    <div class="form-check">
+      <input class="form-check-input" type="checkbox" value="Polygon">
+      <label class="form-check-label" for="flexCheckDefault">
+        Polygon
+      </label>
+    </div>
+    <div class="form-check">
+      <input class="form-check-input" type="checkbox" value="Points" id="points">
+      <label class="form-check-label" for="flexCheckChecked">
+        Points
+      </label>
+    </div>
+    <div class="form-check">
+      <input class="form-check-input" type="checkbox" value="Line String" id="linestring">
+      <label class="form-check-label" for="flexCheckChecked">
+        Line String
+      </label>
+    </div>
+    <div class="form-check">
+      <input class="form-check-input" type="checkbox" value="" id="clear">
+      <label class="form-check-label" for="flexCheckChecked">
+        Clear All
+      </label>
+    </div>
   </div>
   <script>
-    var catalyst = {
-      'strong-strong': 'darkgreen',
-      'strong-stronger': 'green',
-      'strong-weak': 'orange',
-      'weak-strong': 'darkorange',
-      'weak-stronger': 'red',
-      'weak-weak': 'darkred'
-    }
-    // initialize the map
-    var map = L.map('map').setView([22.57, 88.36], 13);
-    var fix = {
+    $(document).ready(function () {
+      var catalyst = {
+        'strong-strong': 'darkgreen',
+        'strong-stronger': 'green',
+        'strong-weak': 'orange',
+        'weak-strong': 'darkorange',
+        'weak-stronger': 'red',
+        'weak-weak': 'darkred'
+      }
+      // initialize the map
+      var map = L.map('map').setView([22.57, 88.36], 13);
+      var fix = {
 
-    }
-    var strongSignal = {
-      radius: 10,
-      fillColor: "#148014",
-      color: "#000",
-      weight: 2,
-      opacity: 1,
-      fillOpacity: 0.8
-    };
-    var mediumSignal = {
-      radius: 10,
-      fillColor: "#90ee90",
-      color: "#000",
-      weight: 2,
-      opacity: 1,
-      fillOpacity: 0.8
-    };
-    var weakSignal = {
-      radius: 10,
-      fillColor: "#ffcccb",
-      color: "#000",
-      weight: 2,
-      opacity: 1,
-      fillOpacity: 0.8
-    };
-    var superWeakSignal = {
-      radius: 10,
-      fillColor: "#FF0000",
-      color: "#000",
-      weight: 2,
-      opacity: 1,
-      fillOpacity: 0.8
-    };
-    var datad = {
-      "type": "FeatureCollection",
-      "features": [
-        {
-          "type": "Feature",
-          "geometry": {
-            "type": "LineString",
-            "coordinates": [
-              [88.3350475, 22.5940972222222, 25],
-              [88.3373707690721, 22.5950932894676, 0]
-            ]
+      }
+      var strongSignal = {
+        radius: 10,
+        fillColor: "#148014",
+        color: "#000",
+        weight: 2,
+        opacity: 1,
+        fillOpacity: 0.8
+      };
+      var mediumSignal = {
+        radius: 10,
+        fillColor: "#90ee90",
+        color: "#000",
+        weight: 2,
+        opacity: 1,
+        fillOpacity: 0.8
+      };
+      var weakSignal = {
+        radius: 10,
+        fillColor: "#ffcccb",
+        color: "#000",
+        weight: 2,
+        opacity: 1,
+        fillOpacity: 0.8
+      };
+      var superWeakSignal = {
+        radius: 10,
+        fillColor: "#FF0000",
+        color: "#000",
+        weight: 2,
+        opacity: 1,
+        fillOpacity: 0.8
+      };
+      var datad = {
+        "type": "FeatureCollection",
+        "features": [
+          {
+            "type": "Feature",
+            "geometry": {
+              "type": "LineString",
+              "coordinates": [
+                [88.3350475, 22.5940972222222, 25],
+                [88.3373707690721, 22.5950932894676, 0]
+              ]
+            },
+            "properties": {
+              "color": "red"
+            }
           },
-          "properties": {
-            "color": "red"
+          {
+            "type": "Feature",
+            "geometry": {
+              "type": "LineString",
+              "coordinates": [
+                [
+                  88.3386122222222,
+                  22.5955047222222],
+
+                [
+                  88.3387485690618,
+                  22.595917909791,
+                  0]
+              ]
+
+            },
+            "properties": {
+              "name": "7",
+              "styleUrl": "#7",
+              "styleHash": "-3c0d873f",
+              "description": "User Affected:= 1\nNeighbour distance:=48 meters",
+              "color": "#ffff00",
+              "stroke-opacity": 1
+            }
           }
-        },
-        {
-          "type": "Feature",
-          "geometry": {
-            "type": "LineString",
-            "coordinates": [
-              [
-                88.3386122222222,
-                22.5955047222222],
-
-              [
-                88.3387485690618,
-                22.595917909791,
-                0]
-            ]
-
-          },
-          "properties": {
-            "name": "7",
-            "styleUrl": "#7",
-            "styleHash": "-3c0d873f",
-            "description": "User Affected:= 1\nNeighbour distance:=48 meters",
-            "color": "#ffff00",
-            "stroke-opacity": 1
-          }
-        }
-      ]
-    };
-    // load a tile layer
-    L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
-      attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
-    }).addTo(map);
-    //map.setTilt(45);
-    var mapopts = {
-      zoomSnap: 0.25,
-    };
+        ]
+      };
+      // load a tile layer
+      L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
+        attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+      }).addTo(map);
+      //map.setTilt(45);
+      var mapopts = {
+        zoomSnap: 0.25,
+      };
 
 
 
-    googleMapscall();
+      googleMapscall();
 
-    var osmb = new OSMBuildings(map).load('https://{s}.data.osmbuildings.org/0.2/anonymous/tile/{z}/{x}/{y}.json');
-    function onEachFeature(feature, layer) {
-      if (feature.properties) {
-        let htmldata = `<div><table class="table-primary table table-striped">
+      var osmb = new OSMBuildings(map).load('https://{s}.data.osmbuildings.org/0.2/anonymous/tile/{z}/{x}/{y}.json');
+      function onEachFeature(feature, layer) {
+        if (feature.properties) {
+          let htmldata = `<div><table class="table-primary table table-striped">
           <tbody>
             <tr>
               <th scope="col">#</th>
@@ -168,199 +195,262 @@
         </table>
         </div>`;
 
-        layer.bindPopup(htmldata);
+          layer.bindPopup(htmldata);
+        }
       }
-    }
-    $.getJSON("g.geojson", function (data) {
-      var k = "red";
-      L.geoJson(data, {
+      // $.getJSON("g.geojson", function (data) {
+      //   var k = "red";
+      //   L.geoJson(data, {
+      //     onEachFeature: onEachFeature,
+      //     pointToLayer: function (feature, latlng) {
+      //       if (feature.geometry.type == "Point") {
+      //         if (feature.properties.name <= 2) {
+      //           return L.circleMarker(latlng, superWeakSignal);
+      //         }
+      //         else if (feature.properties.name == 3) {
+      //           return L.circleMarker(latlng, weakSignal);
+      //         }
+      //         else if (feature.properties.name > 4 && feature.properties.name < 6) {
+      //           return L.circleMarker(latlng, mediumSignal);
+      //         } else {
+      //           return L.circleMarker(latlng, strongSignal);
+      //         }
+      //       }
 
-        onEachFeature: onEachFeature,
-        pointToLayer: function (feature, latlng) {
-          if (feature.geometry.type == "Point") {
-            if (feature.properties.name <= 2) {
-              return L.circleMarker(latlng, superWeakSignal);
-            }
-            else if (feature.properties.name == 3) {
-              return L.circleMarker(latlng, weakSignal);
-            }
-            else if (feature.properties.name > 4 && feature.properties.name < 6) {
-              return L.circleMarker(latlng, mediumSignal);
-            } else {
-              return L.circleMarker(latlng, strongSignal);
-            }
-          }
+      //     },
+      //     style: function (feature) {
+      //       switch (feature.geometry.type) {
+      //         case 'Polygon': return {
+      //           width: 20,
+      //           height: 70,
+      //           fillColor: feature.properties.fill,
+      //           color: "#fff",
+      //           weight: 2,
+      //           opacity: 1,
+      //           fillOpacity: feature.properties['fill-opacity']
+      //         };
+      //         case 'LineString': return {
+      //           stroke: true,
+      //           color: feature.properties.stroke,
+      //           weight: 5
+      //         };
+      //       }
+      //     }
+      //   }).addTo(map)
 
-        },
-        style: function (feature) {
+      // });
 
-
-          switch (feature.geometry.type) {
-            case 'Polygon': return {
+      var promise = $.getJSON("g.geojson");
+      var group = new L.LayerGroup().addTo(map);
+      promise.then(function (data) {
+        var allbusinesses = L.geoJson(data);
+        var polygon = L.geoJson(data, {
+          onEachFeature: onEachFeature,
+          filter: function (feature, layer) {
+            return feature.geometry.type == "Polygon";
+          },
+          style: function (feature) {
+            return {
               width: 20,
               height: 70,
               fillColor: feature.properties.fill,
-              color: "#000",
+              color: "#fff",
               weight: 2,
               opacity: 1,
               fillOpacity: feature.properties['fill-opacity']
             };
-            case 'LineString': return {
+          }
+        });
+
+
+        var points = L.geoJson(data, {
+          onEachFeature: onEachFeature,
+          filter: function (feature, layer) {
+            return feature.geometry.type == "Point";
+          },
+          pointToLayer: function (feature, latlng) {
+            if (feature.geometry.type == "Point") {
+              if (feature.properties.name <= 2) {
+                return L.circleMarker(latlng, superWeakSignal);
+              }
+              else if (feature.properties.name == 3) {
+                return L.circleMarker(latlng, weakSignal);
+              }
+              else if (feature.properties.name > 4 && feature.properties.name < 6) {
+                return L.circleMarker(latlng, mediumSignal);
+              } else {
+                return L.circleMarker(latlng, strongSignal);
+              }
+            }
+          }
+        });
+
+        var linestring = L.geoJson(data, {
+          onEachFeature: onEachFeature,
+          filter: function (feature, layer) {
+            return feature.geometry.type == "LineString";
+          },
+          style: function (feature) {
+            return {
               stroke: true,
               color: feature.properties.stroke,
               weight: 5
             };
           }
-        }
-      }).addTo(map)
+        });
 
-    });
-    // L.geoJson(datad, {
-    //   onEachFeature: function (feature, layer) {
-    //     console.log(feature);
-    //     if (layer instanceof L.Polyline) {
-    //       layer.setStyle({
-    //         'stroke': true,
-    //         'color': feature.properties.color,
-    //         'weight': 10
-    //       });
-    //     }
-    //   }
-    // }).addTo(map);
 
-    function googleMapscall() {
-      var roadMutant = L.gridLayer
-        .googleMutant({
+        $('input[type="checkbox"]').click(function () {
+          if ($(this).val() == "Polygon") {
+            if ($(this).prop("checked") == true) {
+              group.addLayer(polygon)
+            }
+            else if ($(this).prop("checked") == false) {
+              group.removeLayer(polygon)
+            }
+          }
+          else if ($(this).val() == "Points") {
+            if ($(this).prop("checked") == true) {
+              group.addLayer(points)
+            }
+            else if ($(this).prop("checked") == false) {
+              group.removeLayer(points)
+            }
+          }
+          else if ($(this).val() == "Line String") {
+            if ($(this).prop("checked") == true) {
+              group.addLayer(linestring)
+            }
+            else if ($(this).prop("checked") == false) {
+              group.removeLayer(linestring)
+            }
+          }
+
+        });
+
+      });
+      function googleMapscall() {
+        var roadMutant = L.gridLayer
+          .googleMutant({
+            maxZoom: 24,
+            type: "roadmap",
+          })
+          .addTo(map);
+
+        var satMutant = L.gridLayer.googleMutant({
+          maxZoom: 24,
+          type: "satellite",
+        });
+
+        var terrainMutant = L.gridLayer.googleMutant({
+          maxZoom: 24,
+          type: "terrain",
+        });
+
+        var hybridMutant = L.gridLayer.googleMutant({
+          maxZoom: 24,
+          type: "hybrid",
+        });
+
+        var styleMutant = L.gridLayer.googleMutant({
+          styles: [
+            { elementType: "labels", stylers: [{ visibility: "off" }] },
+            { featureType: "water", stylers: [{ color: "#444444" }] },
+            { featureType: "landscape", stylers: [{ color: "#eeeeee" }] },
+            { featureType: "road", stylers: [{ visibility: "off" }] },
+            { featureType: "poi", stylers: [{ visibility: "off" }] },
+            { featureType: "transit", stylers: [{ visibility: "off" }] },
+            { featureType: "administrative", stylers: [{ visibility: "off" }] },
+            {
+              featureType: "administrative.locality",
+              stylers: [{ visibility: "off" }],
+            },
+          ],
+          maxZoom: 24,
+          type: "satellite",
+        });
+
+        var trafficMutant = L.gridLayer.googleMutant({
           maxZoom: 24,
           type: "roadmap",
-        })
-        .addTo(map);
+        });
+        trafficMutant.addGoogleLayer("TrafficLayer");
 
-      var satMutant = L.gridLayer.googleMutant({
-        maxZoom: 24,
-        type: "satellite",
+        var transitMutant = L.gridLayer.googleMutant({
+          maxZoom: 24,
+          type: "roadmap",
+        });
+        transitMutant.addGoogleLayer("TransitLayer");
+
+        var kyiv = [50.5, 30.5],
+          lnd = [88.33, 22.59],
+          sf = [88.33, 22.59],
+          dc = [88.33, 22.59],
+          trd = [88.33, 22.59],
+          madBounds = [
+            [40.7, -4.19],
+            [40.12, -3.31],
+          ],
+          mad = [40.4, -3.7];
+
+        var marker1 = L.marker(kyiv).addTo(map),
+          marker2 = L.marker(lnd).addTo(map),
+          marker3 = L.marker(dc).addTo(map),
+          marker4 = L.marker(sf).addTo(map),
+          marker5 = L.marker(trd).addTo(map),
+          marker6 = L.marker(mad).addTo(map);
+
+        var rectangle = L.rectangle(madBounds).addTo(map);
+
+        var grid = L.gridLayer({
+          attribution: "Debug tilecoord grid",
+        });
+
+        grid.createTile = function (coords) {
+          var tile = L.DomUtil.create("div", "tile-coords");
+          tile.style.border = "1px solid black";
+          tile.style.lineHeight = "256px";
+          tile.style.textAlign = "center";
+          tile.style.fontSize = "20px";
+          tile.innerHTML = [coords.x, coords.y, coords.z].join(", ");
+
+          return tile;
+        };
+
+        L.control
+          .layers(
+            {
+              Roadmap: roadMutant,
+              Aerial: satMutant,
+              Terrain: terrainMutant,
+              Hybrid: hybridMutant,
+              Styles: styleMutant,
+              Traffic: trafficMutant,
+              Transit: transitMutant,
+            },
+            {
+              "Tilecoord grid": grid,
+            },
+            {
+              collapsed: false,
+            }
+          )
+          .addTo(map);
+      }
+
+
+      function picnicFilter(feature) {
+        checkedValues(feature);
+      }
+      function checkedValues(feature) {
+
+      }
+      checkedValues();
+      $(".form-check-label").on("change", function (event) {
+        console.log(event);
       });
+    });
 
-      var terrainMutant = L.gridLayer.googleMutant({
-        maxZoom: 24,
-        type: "terrain",
-      });
-
-      var hybridMutant = L.gridLayer.googleMutant({
-        maxZoom: 24,
-        type: "hybrid",
-      });
-
-      var styleMutant = L.gridLayer.googleMutant({
-        styles: [
-          { elementType: "labels", stylers: [{ visibility: "off" }] },
-          { featureType: "water", stylers: [{ color: "#444444" }] },
-          { featureType: "landscape", stylers: [{ color: "#eeeeee" }] },
-          { featureType: "road", stylers: [{ visibility: "off" }] },
-          { featureType: "poi", stylers: [{ visibility: "off" }] },
-          { featureType: "transit", stylers: [{ visibility: "off" }] },
-          { featureType: "administrative", stylers: [{ visibility: "off" }] },
-          {
-            featureType: "administrative.locality",
-            stylers: [{ visibility: "off" }],
-          },
-        ],
-        maxZoom: 24,
-        type: "satellite",
-      });
-
-      var trafficMutant = L.gridLayer.googleMutant({
-        maxZoom: 24,
-        type: "roadmap",
-      });
-      trafficMutant.addGoogleLayer("TrafficLayer");
-
-      var transitMutant = L.gridLayer.googleMutant({
-        maxZoom: 24,
-        type: "roadmap",
-      });
-      transitMutant.addGoogleLayer("TransitLayer");
-
-      var kyiv = [50.5, 30.5],
-        lnd = [88.33, 22.59],
-        sf = [88.33, 22.59],
-        dc = [88.33, 22.59],
-        trd = [88.33, 22.59],
-        madBounds = [
-          [40.7, -4.19],
-          [40.12, -3.31],
-        ],
-        mad = [40.4, -3.7];
-
-      var marker1 = L.marker(kyiv).addTo(map),
-        marker2 = L.marker(lnd).addTo(map),
-        marker3 = L.marker(dc).addTo(map),
-        marker4 = L.marker(sf).addTo(map),
-        marker5 = L.marker(trd).addTo(map),
-        marker6 = L.marker(mad).addTo(map);
-
-      var rectangle = L.rectangle(madBounds).addTo(map);
-
-      document.getElementById("dc").onclick = function () {
-        map.flyTo(dc, 4);
-      };
-      document.getElementById("sf").onclick = function () {
-        map.setView(sf, 10, { duration: 5, animate: true });
-      };
-      document.getElementById("trd").onclick = function () {
-        map.flyTo(trd, 10, { duration: 20 });
-      };
-      document.getElementById("lnd").onclick = function () {
-        map.flyTo(lnd, 17);
-      };
-      document.getElementById("kyiv").onclick = function () {
-        map.setView(kyiv, 9.25);
-      };
-      document.getElementById("nul").onclick = function () {
-        map.flyTo([0, 0], 10);
-      };
-      document.getElementById("mad").onclick = function () {
-        map.fitBounds(madBounds);
-      };
-      document.getElementById("stop").onclick = function () {
-        map.stop();
-      };
-
-      var grid = L.gridLayer({
-        attribution: "Debug tilecoord grid",
-      });
-
-      grid.createTile = function (coords) {
-        var tile = L.DomUtil.create("div", "tile-coords");
-        tile.style.border = "1px solid black";
-        tile.style.lineHeight = "256px";
-        tile.style.textAlign = "center";
-        tile.style.fontSize = "20px";
-        tile.innerHTML = [coords.x, coords.y, coords.z].join(", ");
-
-        return tile;
-      };
-
-      L.control
-        .layers(
-          {
-            Roadmap: roadMutant,
-            Aerial: satMutant,
-            Terrain: terrainMutant,
-            Hybrid: hybridMutant,
-            Styles: styleMutant,
-            Traffic: trafficMutant,
-            Transit: transitMutant,
-          },
-          {
-            "Tilecoord grid": grid,
-          },
-          {
-            collapsed: false,
-          }
-        )
-        .addTo(map);
-    }
   </script>
 </body>
 
