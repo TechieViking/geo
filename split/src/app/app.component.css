@@ -22,21 +22,9 @@ body {
 .mapcss:last-child{
     margin-right: 0;
 }
-        
-       
-
-input[type="text"] {
-    width: 200px;
-    height: 20px;
-    padding-right: 50px;
-}
-
-input[type="submit"] {
-    margin-left: -50px;
-    height: 25px;
-    width: 50px;
-    background: blue;
-    color: white;
-    border: 0;
-    -webkit-appearance: none;
-}
+.canvas-container{
+   
+}           
+canvas{
+    z-index: 9999 !important;
+}       
