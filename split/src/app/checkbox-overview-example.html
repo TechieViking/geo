@@ -1,0 +1,90 @@
+<div class="container mt-5 bg-grey border p-4">
+	<p class="font-weight-bold">Analytics > Network > Smart Benchmarking</p>
+	<form class="inner-container" *ngFor="let option of uiContent;index as i">
+		<div class="mb-3">
+			<mat-accordion>
+				<mat-expansion-panel [expanded]="isExpanded">
+					<mat-expansion-panel-header class="border-bottom">
+						<mat-panel-title class="font-weight-bold" *ngFor="let analytics of option.data">
+							{{analytics.label}}
+						</mat-panel-title>
+					</mat-expansion-panel-header>
+					<div class="content p-3">
+						<div class="stream">
+							<span class="pr-2">
+								<span class="pr-2" *ngFor="let stream of option.data[0].dataStreams;index as i">
+									{{stream.name}}
+								</span>
+							</span>
+							<div>
+								<mat-slide-toggle (change)="datastreamSlideToggle($event)"></mat-slide-toggle>
+							</div>
+						</div>
+						<div class="operators-list" *ngFor="let operator of option.operators;">
+							<p class="font-weight-bold font17 mt-2">{{operator.label}}</p>
+							<p class="mt-2">
+								<mat-button-toggle-group class="border-0" #group="matButtonToggleGroup" multiple=true
+									[(ngModel)]="selectedButtonToggle" name="button">
+									<mat-button-toggle #button class="mr-2 rounded-pill  border"
+										*ngFor="let list of operator.operatorsList;let i = index"
+										(change)="operatorSelected(list,i,$event)" [value]="list.name">{{list.name}}
+									</mat-button-toggle>
+								</mat-button-toggle-group>
+							</p>
+							<p>
+								<mat-error *ngIf="operatorError">Select at least one operator</mat-error>
+							</p>
+						</div>
+					</div>
+				</mat-expansion-panel>
+			</mat-accordion>
+		</div>
+
+		<mat-accordion class=" d-block mb-2" *ngFor="let operator of criterias;index as i">
+			<mat-expansion-panel [disabled]="operator.accordionState" [(expanded)]="operator.expanded">
+				<mat-expansion-panel-header class="border-bottom">
+					<mat-panel-title>
+						<span class="example-list-section">
+							<mat-checkbox class="example-margin" [checked]="operator.selected" [name]="operator.name"
+								(change)="toggleCriteriaOptions(operator.selected,operator,i,$event)"
+								[disabled]="operator.disabled">
+								{{operator.name}}
+							</mat-checkbox>
+
+						</span>
+					</mat-panel-title>
+				</mat-expansion-panel-header>
+				<ul>
+					<li *ngFor="let option of criterias[i].options">
+						<mat-checkbox [name]="option.name" [(ngModel)]="option.selected" [checked]="option.selected"
+							[disabled]="option.disabled" (change)="optionSelected(option,operator.name)">
+							{{option.name}}
+						</mat-checkbox>
+					</li>
+				</ul>
+				<div *ngIf="operator.name == 'Grid'">
+					<mat-tab-group>
+						<mat-tab label={{tab.name}} *ngFor="let tab of operator.tablabels" [disabled]="tab.disabled">
+							<ul class="pl-0">
+								<li class="d-flex justify-content-between w-100 p-3" *ngFor="let data of tab.tabData">
+									<mat-radio-group aria-label="Select an option" [(ngModel)]="favoriteSeason"
+										[name]="tab.name">
+										<mat-radio-button value="{{data.checkboxLabel}}" [checked]="data.selected"
+											(change)="gridCheckbox(data.checkboxLabel,tab.name)">
+											{{data.checkboxLabel}}
+										</mat-radio-button>
+									</mat-radio-group>
+									<div class="tabgrid">{{data.description}}</div>
+								</li>
+							</ul>
+						</mat-tab>
+					</mat-tab-group>
+				</div>
+			</mat-expansion-panel>
+		</mat-accordion>
+		<p class="d-flex justify-content-between">
+			<button type="submit" (click)="resetForm()" class="btn btn-light border p-3">Reset</button>
+			<button type="submit" class="btn btn-primary p-3" (click)="submitFormData()">Save</button>
+		</p>
+	</form>
+</div>
